@@ -1,0 +1,30 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "inpro.lepton.Grpc";
+
+package lepton;
+
+// Запит (ти раніше згадував такий меседж)
+message ProductListRequest {
+  int32 skipCount = 1;
+  int32 maxResultCount = 2;
+  string sorting = 3;
+}
+
+// Окремий продукт
+message ProductDto {
+  string id = 1;
+  string name = 2;
+  double price = 3;
+}
+
+// Відповідь списком
+message ProductListReply {
+  repeated ProductDto items = 1;
+  int32 totalCount = 2;
+}
+
+// Сервіс
+service ProductService {
+  rpc ListProducts (ProductListRequest) returns (ProductListReply);
+}

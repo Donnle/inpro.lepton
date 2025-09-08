@@ -11,6 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.27.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.67.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
     <PackageReference Include="Volo.Abp.AspNetCore.MultiTenancy" Version="9.3.2" />
@@ -18,6 +23,11 @@
     <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="9.3.2" />
     <PackageReference Include="Volo.Abp.Swashbuckle" Version="9.3.2" />
     <PackageReference Include="Volo.Abp.Account.Web.OpenIddict" Version="9.3.2" />
+
+    <!-- gRPC -->
+    <PackageReference Include="Grpc.AspNetCore" Version="2.66.0" />
+    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.66.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.66.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +38,13 @@
     <ProjectReference Include="..\inpro.lepton.Application\inpro.lepton.Application.csproj" />
     <ProjectReference Include="..\inpro.lepton.EntityFrameworkCore\inpro.lepton.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\inpro.lepton.HttpApi\inpro.lepton.HttpApi.csproj" />
+  </ItemGroup>
+
+  <!-- Скажи Grpc.Tools згенерувати C# з .proto -->
+  <ItemGroup>
+    <Protobuf Include="Protos\product.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\account.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\login.proto"   GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>

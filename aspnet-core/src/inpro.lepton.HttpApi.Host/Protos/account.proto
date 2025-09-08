@@ -1,0 +1,49 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "inpro.lepton.Grpc";
+
+package lepton;
+
+import "google/protobuf/empty.proto";
+
+// --- Register ---
+message RegisterRequest {
+  string appName    = 1; // наприклад "MVC" або "Default"
+  string userName   = 2;
+  string email      = 3;
+  string password   = 4;
+}
+message RegisterReply {
+  string userId   = 1;
+  string userName = 2;
+  string email    = 3;
+}
+
+// --- Password reset: send code ---
+message SendPasswordResetCodeRequest {
+  string appName = 1; // наприклад "MVC"
+  string email   = 2;
+}
+
+// --- Verify token ---
+message VerifyPasswordResetTokenRequest {
+  string userId = 1;
+  string resetToken = 2;
+}
+message VerifyPasswordResetTokenReply {
+  bool isValid = 1;
+}
+
+// --- Reset password ---
+message ResetPasswordRequest {
+  string userId     = 1;
+  string resetToken = 2;
+  string password   = 3;
+}
+
+service AccountService {
+  rpc Register(RegisterRequest) returns (RegisterReply);
+  rpc SendPasswordResetCode(SendPasswordResetCodeRequest) returns (google.protobuf.Empty);
+  rpc VerifyPasswordResetToken(VerifyPasswordResetTokenRequest) returns (VerifyPasswordResetTokenReply);
+  rpc ResetPassword(ResetPasswordRequest) returns (google.protobuf.Empty);
+}
