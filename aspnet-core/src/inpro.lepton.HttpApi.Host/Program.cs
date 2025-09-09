@@ -41,17 +41,17 @@ public class Program
             builder.Services.AddGrpcReflection();    // опціонально для Dev (grpcurl list)
 
             // CORS для браузера (gRPC-Web)
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("GrpcCors", policy =>
-                {
-                    policy
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials()
-                        .SetIsOriginAllowed(_ => true); // TODO: у проді вкажи дозволені origin-и
-                });
-            });
+            // builder.Services.AddCors(options =>
+            // {
+            //     options.AddPolicy("GrpcCors", policy =>
+            //     {
+            //         policy
+            //             .AllowAnyHeader()
+            //             .AllowAnyMethod()
+            //             .AllowCredentials()
+            //             .SetIsOriginAllowed(_ => true); // TODO: у проді вкажи дозволені origin-и
+            //     });
+            // });
             // --------------- /gRPC: services ----------------
 
             await builder.AddApplicationAsync<leptonHttpApiHostModule>();
@@ -62,24 +62,16 @@ public class Program
             app.UseCors("GrpcCors");  // CORS має стояти до MapGrpcService
 
             // Саме ЦЕ (middleware) вмикає підтримку gRPC-Web
-            app.UseGrpcWeb(new GrpcWebOptions
-            {
-                // Можеш увімкнути за замовчуванням (не обов’язково):
-                // DefaultEnabled = true
-            });
+            app.UseGrpcWeb();
 
-            // Підключаємо наш gRPC-сервіс (+gRPC-Web + CORS)
             app.MapGrpcService<ProductGrpcService>()
-               .EnableGrpcWeb()          // дозволити gRPC-Web для цього сервісу
-               .RequireCors("GrpcCors");  // дозволити крос-домен
-            
+                .EnableGrpcWeb();   // <- .RequireCors(...) видаляємо
+
             app.MapGrpcService<AccountGrpcService>()
-                .EnableGrpcWeb()
-                .RequireCors("GrpcCors");
-            
+                .EnableGrpcWeb();
+
             app.MapGrpcService<LoginGrpcService>()
-                .EnableGrpcWeb()
-                .RequireCors("GrpcCors");
+                .EnableGrpcWeb();
 
             // Кореневий чек (не обов’язково)
             app.MapGet("/", () => "HTTP/2 gRPC server is running. Try a gRPC client.");

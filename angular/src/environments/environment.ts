@@ -10,7 +10,7 @@ export const environment = {
     logoUrl: '',
   },
   oAuthConfig: {
-    issuer: 'https://localhost:44346/',
+    issuer: 'http://localhost:5000/',
     redirectUri: baseUrl,
     clientId: 'lepton_App',
     responseType: 'code',
@@ -19,7 +19,7 @@ export const environment = {
   },
   apis: {
     default: {
-      url: 'https://localhost:44346',
+      url: 'http://localhost:5000',
       rootNamespace: 'inpro.lepton',
     },
   },
