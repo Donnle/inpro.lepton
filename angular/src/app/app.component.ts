@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { InternetConnectionStatusComponent, LoaderBarComponent } from '@abp/ng.theme.shared';
 import { DynamicLayoutComponent } from '@abp/ng.core';
+import { BaseGrpcApiService } from './shared/services/base-grpc-api.service';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,12 @@ import { DynamicLayoutComponent } from '@abp/ng.core';
   `,
   imports: [LoaderBarComponent, DynamicLayoutComponent, InternetConnectionStatusComponent],
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  // eslint-disable-next-line @angular-eslint/prefer-inject
+  constructor(private baseGrpcApiService: BaseGrpcApiService) {
+  }
+
+  ngOnInit() {
+    this.baseGrpcApiService.test();
+  }
+}

@@ -39,6 +39,14 @@ public class Program
             // ---------------- gRPC: services ----------------
             builder.Services.AddGrpc();              // сервер gRPC
             builder.Services.AddGrpcReflection();    // опціонально для Dev (grpcurl list)
+            
+            builder.Services.AddCors(o => o.AddPolicy("AllowNg", p =>
+                p.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .WithExposedHeaders("Grpc-Status","Grpc-Message","Grpc-Encoding","Grpc-Accept-Encoding")
+            ));
 
             // CORS для браузера (gRPC-Web)
             // builder.Services.AddCors(options =>
@@ -57,21 +65,27 @@ public class Program
             await builder.AddApplicationAsync<leptonHttpApiHostModule>();
 
             var app = builder.Build();
+            
 
             // ---------------- gRPC: middleware & endpoints ----------------
-            app.UseCors("GrpcCors");  // CORS має стояти до MapGrpcService
+            // app.UseCors("GrpcCors");  // CORS має стояти до MapGrpcService
+            app.UseCors("AllowNg");
+            app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
 
             // Саме ЦЕ (middleware) вмикає підтримку gRPC-Web
-            app.UseGrpcWeb();
+            // app.UseGrpcWeb();
+            // app.MapGrpcService<Lepton.AccountService>()
+            //     .EnableGrpcWeb()
+            //     .RequireCors("AllowNg");
 
             app.MapGrpcService<ProductGrpcService>()
-                .EnableGrpcWeb();   // <- .RequireCors(...) видаляємо
+                .EnableGrpcWeb().RequireCors("AllowNg");
 
             app.MapGrpcService<AccountGrpcService>()
-                .EnableGrpcWeb();
+                .EnableGrpcWeb().RequireCors("AllowNg");
 
             app.MapGrpcService<LoginGrpcService>()
-                .EnableGrpcWeb();
+                .EnableGrpcWeb().RequireCors("AllowNg");
 
             // Кореневий чек (не обов’язково)
             app.MapGet("/", () => "HTTP/2 gRPC server is running. Try a gRPC client.");

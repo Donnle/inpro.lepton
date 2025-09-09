@@ -1,0 +1,42 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "inpro.lepton.Grpc";
+
+package lepton;
+
+import "google/protobuf/empty.proto";
+
+// ---------- Messages ----------
+message LoginRequest {
+  // можна вказати або userName, або email — як у твоєму /api/account/login
+  string userNameOrEmail = 1;
+  string password        = 2;
+  // для multi-tenancy (якщо використовується). Можна залишити пустим.
+  string tenancyName     = 3;
+  // чи робити persistent cookie
+  bool rememberMe        = 4;
+}
+
+message LoginReply {
+  bool success           = 1;
+  bool requiresTwoFactor = 2;
+  bool isLockedOut       = 3;
+  string error           = 4; // пояснення, якщо не success
+}
+
+message CheckPasswordRequest {
+  string userNameOrEmail = 1;
+  string password        = 2;
+  string tenancyName     = 3;
+}
+
+message CheckPasswordReply {
+  bool isValid           = 1;
+}
+
+// ---------- Service ----------
+service LoginService {
+  rpc CheckPassword (CheckPasswordRequest) returns (CheckPasswordReply);
+  rpc Login         (LoginRequest)         returns (LoginReply);
+  rpc Logout        (google.protobuf.Empty) returns (google.protobuf.Empty);
+}
