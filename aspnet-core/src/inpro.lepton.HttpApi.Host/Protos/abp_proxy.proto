@@ -1,0 +1,26 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Inpro.Lepton.Grpc"; // <-- ЦЕ головне для C#
+package abp.proxy; // лишаємо як є (важливо для TS/інших мов)
+
+message Header {
+  string key = 1;
+  string value = 2;
+}
+
+message HttpCallRequest {
+  string method = 1;
+  string path = 2;
+  bytes body = 3;
+  repeated Header headers = 4;
+}
+
+message HttpCallResponse {
+  int32 status_code = 1;
+  bytes body = 2;
+  repeated Header headers = 3;
+}
+
+service AbpHttpProxy {
+  rpc Call (HttpCallRequest) returns (HttpCallResponse);
+}
